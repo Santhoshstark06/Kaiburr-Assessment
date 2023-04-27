@@ -72,3 +72,71 @@ def preprocess_text(text):
 # Apply the pre-processing function to the consumer complaint text
 df['Consumer complaint narrative'] = df['Consumer complaint narrative'].apply(preprocess_text)
 
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from sklearn.svm import LinearSVC
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.pipeline import Pipeline
+
+# Load the consumer complaint dataset into a pandas dataframe
+df = pd.read_csv('consumer_complaints.csv')
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(df['Consumer complaint narrative'], df['Product'], test_size=0.2, random_state=42)
+
+# Create a pipeline for feature extraction and model training
+pipeline = Pipeline([
+    ('tfidf', TfidfVectorizer(max_features=5000)),
+    ('clf', LinearSVC())
+])
+
+# Fit the pipeline to the training data
+pipeline.fit(X_train, y_train)
+
+# Make predictions on the test data
+y_pred = pipeline.predict(X_test)
+
+# Print the classification report
+print(classification_report(y_test, y_pred))
+
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from sklearn.svm import LinearSVC
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.pipeline import Pipeline
+
+# Load the consumer complaint dataset into a pandas dataframe
+df = pd.read_csv('consumer_complaints.csv')
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(df['Consumer complaint narrative'], df['Product'], test_size=0.2, random_state=42)
+
+# Define a list of pipelines for different models
+pipelines = [
+    Pipeline([
+        ('tfidf', TfidfVectorizer(max_features=5000)),
+        ('clf', LinearSVC())
+    ]),
+    Pipeline([
+        ('tfidf', TfidfVectorizer(max_features=5000)),
+        ('clf', MultinomialNB())
+    ]),
+    Pipeline([
+        ('tfidf', TfidfVectorizer(max_features=5000)),
+        ('clf', RandomForestClassifier(n_estimators=100))
+    ])
+]
+
+# Fit each pipeline to the training data and evaluate on the test data
+for pipeline in pipelines:
+    pipeline.fit(X_train, y_train)
+    y_pred = pipeline.predict(X_test)
+    print('Model performance:')
+    print(classification_report(y_test, y_pred))
+
