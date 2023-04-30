@@ -1,5 +1,5 @@
 
-Basic Functionalities :-
+Basic Functionalities :
 Show All servers :-
 Displays all the servers if no parameters are passed.When server id is passed as a parameter - return a single server or 404 if there’s no such a server.
    	        var xhttp = new XMLHttpRequest();
